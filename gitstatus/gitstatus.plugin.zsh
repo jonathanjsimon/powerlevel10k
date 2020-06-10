@@ -365,7 +365,7 @@ function _gitstatus_daemon"${1:-}"() {
       trap '' PIPE
 
       local uname_sm
-      uname_sm="${(L)$(uname -sm)}"          || return
+      uname_sm="${(L)$(command uname -sm)}"          || return
       [[ $uname_sm == [^' ']##' '[^' ']## ]] || return
       local uname_s=${uname_sm% *}
       local uname_m=${uname_sm#* }
@@ -375,15 +375,15 @@ function _gitstatus_daemon"${1:-}"() {
       else
         local cpus
         if (( ! $+commands[sysctl] )) || [[ $uname_s == linux ]] ||
-            ! cpus="$(sysctl -n hw.ncpu)"; then
-          if (( ! $+commands[getconf] )) || ! cpus="$(getconf _NPROCESSORS_ONLN)"; then
+            ! cpus="$(command sysctl -n hw.ncpu)"; then
+          if (( ! $+commands[getconf] )) || ! cpus="$(command getconf _NPROCESSORS_ONLN)"; then
             cpus=8
           fi
         fi
         args+=(-t $((cpus > 16 ? 32 : cpus > 0 ? 2 * cpus : 16)))
       fi
 
-      mkfifo -- $file_prefix.fifo           || return
+      command mkfifo -- $file_prefix.fifo   || return
       print -rnu $pipe_fd -- ${(l:20:)pgid} || return
       exec <$file_prefix.fifo               || return
       zf_rm -- $file_prefix.fifo            || return
@@ -414,6 +414,9 @@ function _gitstatus_daemon"${1:-}"() {
 
       (( ! _gitstatus_zsh_downloaded ))                || return
       [[ ${GITSTATUS_AUTO_INSTALL:-1} == (|-|+)<1-> ]] || return
+      [[ $_gitstatus_zsh_daemon ==
+         ${GITSTATUS_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/gitstatus}/* ]] || return
+
       set -- -f "$@"
       _gitstatus_zsh_daemon=
       _gitstatus_zsh_version=
@@ -735,7 +738,7 @@ function gitstatus_start"${1:-}"() {
       print -Pru2 -- "  Zsh log (%U${xtrace//\%/%%}%u):"
       print -Pru2 -- '%F{yellow}'
       print -lru2 -- "${(@)${(@f)$(<$xtrace)}/#/    }"
-      print -Pru2 -- "                    %F{red}^ this command failed ($err)%f"
+      print -Pnru2 -- '%f'
     fi
     if [[ -s $daemon_log ]]; then
       print -ru2   -- ''
@@ -749,7 +752,7 @@ function gitstatus_start"${1:-}"() {
       print -ru2   -- '  System information:'
       print -Pru2  -- '%F{yellow}'
       print -ru2   -- "    zsh:      $ZSH_VERSION"
-      print -ru2   -- "    uname -a: $(uname -a)"
+      print -ru2   -- "    uname -a: $(command uname -a)"
       print -Pru2  -- '%f'
       print -ru2   -- '  If you need help, open an issue and attach this whole error message to it:'
       print -ru2   -- ''
