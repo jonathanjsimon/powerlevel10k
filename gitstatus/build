@@ -9,6 +9,14 @@ if [ -n "${ZSH_VERSION:-}" ]; then
   emulate sh -o err_exit -o no_unset
 fi
 
+export LC_ALL=C
+
+if [ -z "${ZSH_VERSION-}" ] && command -v zsh >/dev/null 2>&1; then
+  case "${BASH_VERSION-}" in
+    [0-3].*) exec zsh "$0" "$@";;
+  esac
+fi
+
 usage="$(command cat <<\END
 Usage: build [-m ARCH] [-c CPU] [-d CMD] [-i IMAGE] [-s] [-w]
 
@@ -27,7 +35,7 @@ Options:
             succeed; on some operating systems this option is not
             supported; on others it can have partial effect
   -w        automatically download tarballs for dependencies if they
-            don't already exist in ./deps; dependencies are described
+            do not already exist in ./deps; dependencies are described
             in ./build.info
 END
 )"
@@ -52,7 +60,7 @@ if [ "$(narg $workdir)" != 1 -o -z "${workdir##*:*}" ]; then
   exit 1
 fi
 
-appname=gitstatusd-"$gitstatus_kernel"-"$gitstatus_arch"
+appname=gitstatusd
 libgit2_tmp="$outdir"/deps/"$appname".libgit2.tmp
 
 cleanup() {
@@ -68,8 +76,16 @@ trap cleanup INT QUIT TERM ILL PIPE
 if [ -n "$gitstatus_install_tools" ]; then
   case "$gitstatus_kernel" in
     linux)
-      command apk update
-      command apk add binutils cmake gcc g++ git make musl-dev perl-utils
+      if command -v apk >/dev/null 2>&1; then
+        command apk update
+        command apk add binutils cmake gcc g++ git make musl-dev perl-utils
+      elif command -v apt-get >/dev/null 2>&1; then
+        apt-get update
+        apt-get install -y binutils cmake gcc g++ make wget
+      else
+        >&2 echo "[error] -s is not supported on this system"
+        exit 1
+      fi
     ;;
     freebsd)
       command pkg install -y cmake gmake binutils gcc git perl5
@@ -82,17 +98,20 @@ if [ -n "$gitstatus_install_tools" ]; then
         >&2 echo "[error] please run 'xcode-select --install' and retry"
         exit 1
       fi
-      if ! command -v brew >/dev/null 2>&1; then
-        >&2 echo "[error] please install homebrew from https://brew.sh/ and retry"
+      if command -v port >/dev/null 2>&1; then
+        sudo port -N install libiconv cmake wget
+      elif command -v brew >/dev/null 2>&1; then
+        for formula in libiconv cmake git wget; do
+          if command brew list "$formula" &>/dev/null; then
+            command brew upgrade "$formula"
+          else
+            command brew install "$formula"
+          fi
+        done
+      else
+        >&2 echo "[error] please install MacPorts or Homebrew and retry"
         exit 1
       fi
-      for formula in libiconv cmake git wget; do
-        if command brew list "$formula" &>/dev/null; then
-          command brew upgrade "$formula"
-        else
-          command brew install "$formula"
-        fi
-      done
     ;;
     msys*|mingw*)
       command pacman -Syu --noconfirm
@@ -110,8 +129,8 @@ cpus="$(command getconf _NPROCESSORS_ONLN 2>/dev/null)" ||
   cpus=8
 
 case "$gitstatus_cpu" in
-  ppc64le) archflag="-mcpu";;
-  *)       archflag="-march";;
+  powerpc64le) archflag="-mcpu";;
+  *)           archflag="-march";;
 esac
 
 cflags="$archflag=$gitstatus_cpu -fno-plt"
@@ -131,9 +150,7 @@ gitstatus_make=make
 
 case "$gitstatus_kernel" in
   linux)
-    if [ -n "$docker_cmd" ]; then
-      gitstatus_ldflags="$gitstatus_ldflags -static"
-    fi
+    gitstatus_ldflags="$gitstatus_ldflags -static"
     gitstatus_ldflags="$gitstatus_ldflags -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now"
     libgit2_cmake_flags="$libgit2_cmake_flags -DENABLE_REPRODUCIBLE_BUILDS=ON"
   ;;
@@ -151,10 +168,17 @@ case "$gitstatus_kernel" in
   ;;
   darwin)
     command mkdir -- "$workdir"/lib
-    command ln -s -- /usr/local/opt/libiconv/lib/libiconv.a "$workdir"/lib
+    if [ -e /opt/local/lib/libiconv.a ]; then
+      command ln -s -- /opt/local/lib/libiconv.a "$workdir"/lib
+      libgit2_cflags="$libgit2_cflags -I/opt/local/include"
+      gitstatus_cxxflags="$gitstatus_cxxflags -I/opt/local/include"
+    else
+      brew_prefix="$(command brew --prefix)"
+      command ln -s -- "$brew_prefix"/opt/libiconv/lib/libiconv.a "$workdir"/lib
+      libgit2_cflags="$libgit2_cflags -I"$brew_prefix"/opt/libiconv/include"
+      gitstatus_cxxflags="$gitstatus_cxxflags -I"$brew_prefix"/opt/libiconv/include"
+    fi
     libgit2_cmake_flags="$libgit2_cmake_flags -DUSE_ICONV=ON"
-    libgit2_cflags="$libgit2_cflags -I/usr/local/opt/libiconv/include"
-    gitstatus_cxxflags="$gitstatus_cxxflags -I/usr/local/opt/libiconv/include"
     gitstatus_ldlibs="$gitstatus_ldlibs -liconv"
     gitstatus_ldflags="$gitstatus_ldflags -L${workdir}/lib"
     libgit2_cmake_flags="$libgit2_cmake_flags -DENABLE_REPRODUCIBLE_BUILDS=OFF"
@@ -401,6 +425,7 @@ if [ -z "$gitstatus_cpu" ]; then
   case "$gitstatus_arch" in
     armv6l)         gitstatus_cpu=armv6;;
     armv7l)         gitstatus_cpu=armv7;;
+    arm64)          gitstatus_cpu=armv8;;
     aarch64)        gitstatus_cpu=armv8-a;;
     ppc64le)        gitstatus_cpu=powerpc64le;;
     riscv64)        gitstatus_cpu=rv64imafdc;;
@@ -446,9 +471,6 @@ case "$gitstatus_kernel" in
           ;;
         esac
       fi
-    elif [ -n "$gitstatus_install_tools" ]; then
-      >&2 echo '[error] -s without -d is not supported on linux'
-      exit 1
     fi
   ;;
   freebsd|netbsd|darwin)

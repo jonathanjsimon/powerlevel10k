@@ -116,16 +116,18 @@ bool ListDir(int dir_fd, Arena& arena, std::vector<char*>& entries, bool precomp
       entries.clear();
       return false;
     }
-    if (n == 0) break;
     for (int pos = 0; pos < n;) {
       auto* ent = reinterpret_cast<linux_dirent64*>(buf + pos);
       if (!Dots(ent->d_name)) entries.push_back(ent->d_name);
       pos += ent->d_reclen;
-      // It's tempting to bail here if n + sizeof(linux_dirent64) + 512 <= n. After all, there
-      // was enough space for another entry but SYS_getdents64 didn't write it, so this must be
-      // the end of the directory listing, right? Unfortuatenly, no. SYS_getdents64 is finicky.
-      // It sometimes writes a partial list of entries even if the full list would fit.
     }
+    if (n == 0) break;
+    // The following optimization relies on SYS_getdents64 always returning as many
+    // entries as would fit. This is not guaranteed by the specification and I don't
+    // know if this is true in practice. The optimization has no measurable effect on
+    // gitstatus performance, so it's turned off.
+    //
+    //   if (n + sizeof(linux_dirent64) + 512 <= kBufSize) break;
   }
 
   if (case_sensitive) {
@@ -209,14 +211,15 @@ char* DirenvConvert(Arena& arena, struct dirent& ent, bool do_convert) {
 
 bool ListDir(int dir_fd, Arena& arena, std::vector<char*>& entries, bool precompose_unicode,
              bool case_sensitive) {
-  VERIFY((dir_fd = dup(dir_fd)) >= 0);
+  entries.clear();
+  dir_fd = dup(dir_fd);
+  if (dir_fd < 0) return false;
   DIR* dir = fdopendir(dir_fd);
   if (!dir) {
     CHECK(!close(dir_fd)) << Errno();
-    return -1;
+    return false;
   }
   ON_SCOPE_EXIT(&) { CHECK(!closedir(dir)) << Errno(); };
-  entries.clear();
   while (struct dirent* ent = (errno = 0, readdir(dir))) {
     if (Dots(ent->d_name)) continue;
     entries.push_back(DirenvConvert(arena, *ent, precompose_unicode));
