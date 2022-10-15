@@ -69,6 +69,8 @@ function _p9k_init_icons() {
         LINUX_SLACKWARE_ICON           '\uE271'$s             # 
         LINUX_VOID_ICON                '\uE271'$s             # 
         LINUX_ARTIX_ICON               '\uE271'$s             # 
+        LINUX_RHEL_ICON                '\uE271'$s             # 
+        LINUX_AMZN_ICON                '\uE271'$s             # 
         SUNOS_ICON                     '\U1F31E'$q            # 🌞
         HOME_ICON                      '\uE12C'$s             # 
         HOME_SUB_ICON                  '\uE18D'$s             # 
@@ -132,6 +134,7 @@ function _p9k_init_icons() {
         LUA_ICON                       'lua'
         PERL_ICON                      'perl'
         NNN_ICON                       'nnn'
+        XPLR_ICON                      'xplr'
         TIMEWARRIOR_ICON               'tw'
         TASKWARRIOR_ICON               'task'
         NIX_SHELL_ICON                 'nix'
@@ -144,6 +147,8 @@ function _p9k_init_icons() {
         PACKAGE_ICON                   'pkg'
         JULIA_ICON                     'jl'
         SCALA_ICON                     'scala'
+        TOOLBOX_ICON                   '\u2B22'               # ⬢
+        ARCH_ICON                      'arch'
       )
     ;;
     'awesome-fontconfig')
@@ -201,6 +206,8 @@ function _p9k_init_icons() {
         LINUX_SLACKWARE_ICON           '\uF17C'$s             # 
         LINUX_VOID_ICON                '\uF17C'$s             # 
         LINUX_ARTIX_ICON               '\uF17C'$s             # 
+        LINUX_RHEL_ICON                '\uF17C'$s             # 
+        LINUX_AMZN_ICON                '\uF17C'$s             # 
         SUNOS_ICON                     '\uF185 '              # 
         HOME_ICON                      '\uF015'$s             # 
         HOME_SUB_ICON                  '\uF07C'$s             # 
@@ -260,6 +267,7 @@ function _p9k_init_icons() {
         LUA_ICON                       'lua'
         PERL_ICON                      'perl'
         NNN_ICON                       'nnn'
+        XPLR_ICON                      'xplr'
         TIMEWARRIOR_ICON               'tw'
         TASKWARRIOR_ICON               'task'
         NIX_SHELL_ICON                 'nix'
@@ -272,6 +280,8 @@ function _p9k_init_icons() {
         PACKAGE_ICON                   'pkg'
         JULIA_ICON                     'jl'
         SCALA_ICON                     'scala'
+        TOOLBOX_ICON                   '\u2B22'               # ⬢
+        ARCH_ICON                      'arch'
       )
     ;;
     'awesome-mapped-fontconfig')
@@ -334,6 +344,8 @@ function _p9k_init_icons() {
         LINUX_SLACKWARE_ICON           "${CODEPOINT_OF_AWESOME_LINUX:+\\u$CODEPOINT_OF_AWESOME_LINUX$s}"
         LINUX_VOID_ICON                "${CODEPOINT_OF_AWESOME_LINUX:+\\u$CODEPOINT_OF_AWESOME_LINUX$s}"
         LINUX_ARTIX_ICON               "${CODEPOINT_OF_AWESOME_LINUX:+\\u$CODEPOINT_OF_AWESOME_LINUX$s}"
+        LINUX_RHEL_ICON                "${CODEPOINT_OF_AWESOME_LINUX:+\\u$CODEPOINT_OF_AWESOME_LINUX$s}"
+        LINUX_AMZN_ICON                "${CODEPOINT_OF_AWESOME_LINUX:+\\u$CODEPOINT_OF_AWESOME_LINUX$s}"
         SUNOS_ICON                     "${CODEPOINT_OF_AWESOME_SUN_O:+\\u$CODEPOINT_OF_AWESOME_SUN_O }"
         HOME_ICON                      "${CODEPOINT_OF_AWESOME_HOME:+\\u$CODEPOINT_OF_AWESOME_HOME$s}"
         HOME_SUB_ICON                  "${CODEPOINT_OF_AWESOME_FOLDER_OPEN:+\\u$CODEPOINT_OF_AWESOME_FOLDER_OPEN$s}"
@@ -391,6 +403,7 @@ function _p9k_init_icons() {
         LUA_ICON                       'lua'
         PERL_ICON                      'perl'
         NNN_ICON                       'nnn'
+        XPLR_ICON                      'xplr'
         TIMEWARRIOR_ICON               'tw'
         TASKWARRIOR_ICON               'task'
         NIX_SHELL_ICON                 'nix'
@@ -403,6 +416,8 @@ function _p9k_init_icons() {
         PACKAGE_ICON                   'pkg'
         JULIA_ICON                     'jl'
         SCALA_ICON                     'scala'
+        TOOLBOX_ICON                   '\u2B22'                                       # ⬢
+        ARCH_ICON                      'arch'
       )
     ;;
     'nerdfont-complete'|'nerdfont-fontconfig')
@@ -460,6 +475,8 @@ function _p9k_init_icons() {
         LINUX_VOID_ICON                '\uF17C'               # 
         LINUX_ARTIX_ICON               '\uF17C'               # 
         LINUX_UBUNTU_ICON              '\uF31b'$s             # 
+        LINUX_RHEL_ICON                '\uF316'$s             # 
+        LINUX_AMZN_ICON                '\uF270'$s             # 
         LINUX_ICON                     '\uF17C'               # 
         SUNOS_ICON                     '\uF185 '              # 
         HOME_ICON                      '\uF015'$s             # 
@@ -520,6 +537,7 @@ function _p9k_init_icons() {
         LUA_ICON                       '\uE620'               # 
         PERL_ICON                      '\uE769'               # 
         NNN_ICON                       'nnn'
+        XPLR_ICON                      'xplr'
         TIMEWARRIOR_ICON               '\uF49B'               # 
         TASKWARRIOR_ICON               '\uF4A0 '              # 
         NIX_SHELL_ICON                 '\uF313 '              # 
@@ -532,6 +550,8 @@ function _p9k_init_icons() {
         PACKAGE_ICON                   '\uF8D6'               # 
         JULIA_ICON                     '\uE624'               # 
         SCALA_ICON                     '\uE737'               # 
+        TOOLBOX_ICON                   '\uE20F'$s             # 
+        ARCH_ICON                      '\uE266'               # 
       )
     ;;
     ascii)
@@ -587,6 +607,8 @@ function _p9k_init_icons() {
         LINUX_SLACKWARE_ICON           'slack'
         LINUX_VOID_ICON                'void'
         LINUX_ARTIX_ICON               'artix'
+        LINUX_RHEL_ICON                'rhel'
+        LINUX_AMZN_ICON                'amzn'
         SUNOS_ICON                     'sunos'
         HOME_ICON                      ''
         HOME_SUB_ICON                  ''
@@ -646,6 +668,7 @@ function _p9k_init_icons() {
         LUA_ICON                       'lua'
         PERL_ICON                      'perl'
         NNN_ICON                       'nnn'
+        XPLR_ICON                      'xplr'
         TIMEWARRIOR_ICON               'tw'
         TASKWARRIOR_ICON               'task'
         NIX_SHELL_ICON                 'nix'
@@ -658,6 +681,8 @@ function _p9k_init_icons() {
         PACKAGE_ICON                   'pkg'
         JULIA_ICON                     'jl'
         SCALA_ICON                     'scala'
+        TOOLBOX_ICON                   'toolbox'
+        ARCH_ICON                      'arch'
       )
     ;;
     *)
@@ -715,6 +740,8 @@ function _p9k_init_icons() {
         LINUX_SLACKWARE_ICON           'Sla'
         LINUX_VOID_ICON                'Vo'
         LINUX_ARTIX_ICON               'Art'
+        LINUX_RHEL_ICON                'RH'
+        LINUX_AMZN_ICON                'Amzn'
         SUNOS_ICON                     'Sun'
         HOME_ICON                      ''
         HOME_SUB_ICON                  ''
@@ -774,6 +801,7 @@ function _p9k_init_icons() {
         LUA_ICON                       'lua'
         PERL_ICON                      'perl'
         NNN_ICON                       'nnn'
+        XPLR_ICON                      'xplr'
         TIMEWARRIOR_ICON               'tw'
         TASKWARRIOR_ICON               'task'
         NIX_SHELL_ICON                 'nix'
@@ -786,6 +814,8 @@ function _p9k_init_icons() {
         PACKAGE_ICON                   'pkg'
         JULIA_ICON                     'jl'
         SCALA_ICON                     'scala'
+        TOOLBOX_ICON                   '\u2B22'               # ⬢
+        ARCH_ICON                      'arch'
       )
     ;;
   esac
@@ -810,6 +840,7 @@ function _p9k_init_icons() {
     icons[LEFT_SEGMENT_END_SEPARATOR]+=' '
     icons[MULTILINE_LAST_PROMPT_PREFIX]+=' '
     icons[VCS_TAG_ICON]+=' '
+    icons[VCS_BOOKMARK_ICON]+=' '
     icons[VCS_COMMIT_ICON]+=' '
     icons[VCS_BRANCH_ICON]+=' '
     icons[VCS_REMOTE_BRANCH_ICON]+=' '

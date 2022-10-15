@@ -22,7 +22,8 @@ Bash bindings for integration with shell.
 
 The easiest way to take advantage of gitstatus from Zsh is to use a theme that's already integrated
 with it. For example, [Powerlevel10k](https://github.com/romkatv/powerlevel10k) is a flexible and
-fast theme with first-class gitstatus integration.
+fast theme with first-class gitstatus integration. If you install Powerlevel10k, you don't need to
+install gitstatus.
 
 ![Powerlevel10k Zsh Theme](
   https://raw.githubusercontent.com/romkatv/powerlevel10k-media/master/prompt-styles-high-contrast.png)
@@ -35,7 +36,7 @@ git clone --depth=1 https://github.com/romkatv/gitstatus.git ~/gitstatus
 echo 'source ~/gitstatus/gitstatus.prompt.zsh' >>! ~/.zshrc
 ```
 
-Users in mainland China can use the official mirror on gitee.com for faster download.<br>
+Users in China can use the official mirror on gitee.com for faster download.<br>
 中国大陆用户可以使用 gitee.com 上的官方镜像加速下载.
 
 ```zsh
@@ -43,15 +44,15 @@ git clone --depth=1 https://gitee.com/romkatv/gitstatus.git ~/gitstatus
 echo 'source ~/gitstatus/gitstatus.prompt.zsh' >>! ~/.zshrc
 ```
 
-Alternatively, on macOS you can install with Homebrew:
+Alternatively, if you have Homebrew installed:
 
 ```zsh
 brew install romkatv/gitstatus/gitstatus
-echo 'source /usr/local/opt/gitstatus/gitstatus.prompt.zsh' >>! ~/.zshrc
+echo "source $(brew --prefix)/opt/gitstatus/gitstatus.prompt.zsh" >>! ~/.zshrc
 ```
 
-(If you choose this option, replace `~/gitstatus` with `/usr/local/opt/gitstatus` in all code
-snippets below.)
+(If you choose this option, replace `~/gitstatus` with `$(brew --prefix)/opt/gitstatus/gitstatus`
+in all code snippets below.)
 
 _Make sure to disable your current theme if you have one._
 
@@ -136,7 +137,7 @@ git clone --depth=1 https://github.com/romkatv/gitstatus.git ~/gitstatus
 echo 'source ~/gitstatus/gitstatus.prompt.sh' >> ~/.bashrc
 ```
 
-Users in mainland China can use the official mirror on gitee.com for faster download.<br>
+Users in China can use the official mirror on gitee.com for faster download.<br>
 中国大陆用户可以使用 gitee.com 上的官方镜像加速下载.
 
 ```bash
@@ -144,15 +145,15 @@ git clone --depth=1 https://gitee.com/romkatv/gitstatus.git ~/gitstatus
 echo 'source ~/gitstatus/gitstatus.prompt.sh' >> ~/.bashrc
 ```
 
-Alternatively, on macOS you can install with Homebrew:
+Alternatively, if you have Homebrew installed:
 
 ```zsh
 brew install romkatv/gitstatus/gitstatus
-echo 'source /usr/local/opt/gitstatus/gitstatus.prompt.sh' >> ~/.bashrc
+echo "source $(brew --prefix)/opt/gitstatus/gitstatus.prompt.sh" >> ~/.bashrc
 ```
 
-(If you choose this option, replace `~/gitstatus` with `/usr/local/opt/gitstatus` in all code
-snippets below.)
+(If you choose this option, replace `~/gitstatus` with `$(brew --prefix)/opt/gitstatus/gitstatus`
+in all code snippets below.)
 
 This will give you a basic yet functional prompt with git status in it. It's
 [over 10x faster](#benchmarks) than any alternative that can give you comparable prompt.
@@ -491,7 +492,7 @@ cd gitstatus
 ./build -w -s -d docker
 ```
 
-Users in mainland China can use the official mirror on gitee.com for faster download.<br>
+Users in China can use the official mirror on gitee.com for faster download.<br>
 中国大陆用户可以使用 gitee.com 上的官方镜像加速下载.
 
 ```zsh
